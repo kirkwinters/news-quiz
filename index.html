@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News Quiz — May 14, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1714;
+    --ink-mid: #4a4540;
+    --ink-light: #8a847c;
+    --paper: #f7f3ec;
+    --paper-mid: #ede8df;
+    --rule: #c8c0b4;
+    --accent: #b5390a;
+    --correct-bg: #eef4e8;
+    --correct-border: #5a8a2a;
+    --correct-text: #2e4d10;
+    --wrong-bg: #faeaea;
+    --wrong-border: #c04040;
+    --wrong-text: #6b1c1c;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  /* Masthead */
+  .masthead {
+    text-align: center;
+    border-top: 3px double var(--ink);
+    border-bottom: 3px double var(--ink);
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+  }
+
+  .masthead-label {
+    font-family: 'Source Serif 4', serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 0.4rem;
+  }
+
+  .masthead-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(28px, 6vw, 46px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .masthead-sub {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* Progress */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 2px;
+    background: var(--rule);
+  }
+
+  .progress-fill {
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* Question card */
+  .question-card {
+    border-top: 1px solid var(--ink);
+    padding-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .q-number {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .q-text {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(17px, 3vw, 22px);
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Options */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .opt-btn {
+    text-align: left;
+    background: var(--paper-mid);
+    border: 1px solid var(--rule);
+    padding: 12px 16px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    line-height: 1.5;
+    width: 100%;
+  }
+
+  .opt-btn:hover:not(:disabled) {
+    background: var(--paper);
+    border-color: var(--ink-mid);
+  }
+
+  .opt-btn:disabled { cursor: default; }
+
+  .opt-btn.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  .opt-btn.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong-border);
+    color: var(--wrong-text);
+  }
+
+  .opt-btn.reveal {
+    background: var(--correct-bg);
+    border-color: var(--correct-border);
+    color: var(--correct-text);
+  }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 1.2rem;
+    border-left: 2px solid var(--rule);
+    padding-left: 1rem;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-mid);
+    font-style: italic;
+    display: none;
+  }
+
+  /* Next button */
+  .next-btn {
+    margin-top: 1.5rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 11px 24px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    display: none;
+    transition: background 0.15s;
+  }
+
+  .next-btn:hover { background: var(--accent); }
+
+  /* Score screen */
+  #score-screen {
+    display: none;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .score-fraction {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .score-pct {
+    font-size: 18px;
+    color: var(--ink-light);
+    margin: 0.5rem 0 1.5rem;
+    font-style: italic;
+  }
+
+  .score-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--rule);
+    margin: 1.5rem auto;
+  }
+
+  .score-note {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-mid);
+    max-width: 480px;
+    margin: 0 auto 2rem;
+  }
+
+  .restart-btn {
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    padding: 10px 24px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .restart-btn:hover { background: var(--ink); color: var(--paper); }
+
+  /* Footer */
+  .footer {
+    margin-top: 3rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+    font-size: 12px;
+    color: var(--ink-light);
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 480px) {
+    .opt-btn { font-size: 14px; padding: 11px 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <div class="masthead-label">Current Events Quiz</div>
+    <div class="masthead-title">The Daily Briefing</div>
+    <div class="masthead-sub">May 14, 2026 &mdash; Seven questions every informed citizen should be able to answer</div>
+  </header>
+
+  <div id="quiz">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+      <div class="progress-label" id="prog-label">1 of 7</div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-number" id="q-num">Question 1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="opts"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <div id="score-screen">
+    <div class="score-fraction" id="s-fraction"></div>
+    <div class="score-pct" id="s-pct"></div>
+    <div class="score-divider"></div>
+    <div class="score-note" id="s-note"></div>
+    <button class="restart-btn" onclick="restart()">Retake the quiz</button>
+  </div>
+
+  <footer class="footer">Quiz based on headlines from May 14, 2026</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "President Trump is currently in Beijing for a summit with Xi Jinping. What major warning did Xi deliver during their meeting?",
+    opts: [
+      "That China would impose new tariffs if Taiwan arms sales continued",
+      "That mishandling the Taiwan issue could lead to an 'extremely dangerous situation'",
+      "That China was prepared to close the South China Sea to U.S. ships",
+      "That China would pull out of trade negotiations unless sanctions ended"
+    ],
+    correct: 1,
+    explain: "Xi told Trump directly that Taiwan, if handled poorly, could lead to a dangerous clash between the two powers. Taiwan remains the single most volatile issue between the U.S. and China."
+  },
+  {
+    q: "The U.S. is currently fighting a war with which country — a conflict driving up oil prices, fueling inflation, and dominating foreign policy debates?",
+    opts: ["Russia", "North Korea", "Iran", "Saudi Arabia"],
+    correct: 2,
+    explain: "The U.S.-Iran war is the central backdrop to nearly every major news story today: the Trump-Xi summit, rising inflation, Republican midterm anxiety, and the Strait of Hormuz crisis threatening global oil flows."
+  },
+  {
+    q: "The Strait of Hormuz is a critical flashpoint in the Iran war. Why does it matter so much economically?",
+    opts: [
+      "It is the only route for U.S. military supply ships to the region",
+      "It connects the Atlantic and Pacific oceans",
+      "A large share of the world's oil passes through it, and Iran has deployed submarines there",
+      "It is the primary cable route for global internet traffic"
+    ],
+    correct: 2,
+    explain: "The Strait of Hormuz is the narrow chokepoint through which a significant portion of the world's oil supply flows. Iran has deployed submarines there, and both Trump and Xi stressed the need to keep it open."
+  },
+  {
+    q: "The U.S. Senate confirmed a new Federal Reserve chair to succeed Jerome Powell, whose term is ending. Who was confirmed?",
+    opts: ["Janet Yellen", "Kevin Warsh", "Larry Summers", "Neel Kashkari"],
+    correct: 1,
+    explain: "Kevin Warsh was confirmed 54-45, largely along party lines. He takes over as Fed chair at a moment of rising inflation, public economic anxiety, and ongoing pressure on the central bank's independence."
+  },
+  {
+    q: "Inflation data released this week showed price pressures are getting worse, not better. What is the primary concern beyond the Iran-war energy spike?",
+    opts: [
+      "A global semiconductor shortage driving up electronics prices",
+      "Broad price pressures spreading across many categories of goods and services",
+      "A sudden collapse in agricultural exports",
+      "The Federal Reserve cutting interest rates too aggressively"
+    ],
+    correct: 1,
+    explain: "New wholesale price data showed inflation spreading well beyond energy, with pressures across a wide range of goods and services — a troubling sign for household budgets and for Republicans heading into midterms."
+  },
+  {
+    q: "A hantavirus outbreak that began on a cruise ship has prompted quarantines and an international investigation. Where are U.S. passengers who tested positive currently being held?",
+    opts: [
+      "On the docked cruise ship under Coast Guard supervision",
+      "At a national quarantine center in Nebraska",
+      "In a military hospital in Washington, D.C.",
+      "At Walter Reed National Military Medical Center"
+    ],
+    correct: 1,
+    explain: "American passengers who tested positive were flown to a national quarantine unit in Nebraska. The CDC has been managing the response carefully, trying to avoid repeating the communication failures of the Covid era."
+  },
+  {
+    q: "Which of the following best describes the political pressure facing Republicans as the 2026 midterms approach?",
+    opts: [
+      "Voter anger primarily over immigration policy and border security",
+      "Rising inflation, an unpopular war with Iran, and redistricting setbacks in key states",
+      "Declining approval for recent Supreme Court rulings",
+      "Internal conflict over proposed cuts to Medicare and Social Security"
+    ],
+    correct: 1,
+    explain: "Republicans are navigating a difficult combination: rising prices, a divisive and costly Iran war, and court-ordered redistricting reversals — all of which could hurt their midterm performance this November."
+  }
+];
+
+let current = 0, score = 0, answered = false;
+
+function render() {
+  const q = questions[current];
+  const total = questions.length;
+  document.getElementById('q-num').textContent = 'Question ' + (current + 1);
+  document.getElementById('prog-label').textContent = (current + 1) + ' of ' + total;
+  document.getElementById('prog').style.width = (current / total * 100) + '%';
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('next-btn').style.display = 'none';
+  answered = false;
+
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  q.opts.forEach(function(o, i) {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o;
+    btn.onclick = function() { pick(i); };
+    opts.appendChild(btn);
+  });
+}
+
+function pick(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const btns = document.getElementById('opts').querySelectorAll('.opt-btn');
+  btns.forEach(function(b) { b.disabled = true; });
+  btns[i].classList.add(i === q.correct ? 'correct' : 'wrong');
+  if (i !== q.correct) btns[q.correct].classList.add('reveal');
+  if (i === q.correct) score++;
+  const fb = document.getElementById('feedback');
+  fb.textContent = q.explain;
+  fb.style.display = 'block';
+  const nb = document.getElementById('next-btn');
+  nb.textContent = current < questions.length - 1 ? 'Continue \u2192' : 'See results \u2192';
+  nb.style.display = 'inline-block';
+}
+
+document.getElementById('next-btn').onclick = function() {
+  current++;
+  if (current >= questions.length) showScore();
+  else render();
+};
+
+function showScore() {
+  document.getElementById('quiz').style.display = 'none';
+  const total = questions.length;
+  const pct = Math.round(score / total * 100);
+  let note;
+  if (pct >= 85) note = "You're well-informed on the major stories shaping U.S. policy, the economy, and the world right now. Keep it up.";
+  else if (pct >= 57) note = "You have a solid grasp of the big picture. A few key details on the Iran war, the new Fed chair, and the Trump-Xi summit are worth following closely.";
+  else if (pct >= 28) note = "Some important stories may have slipped by. The Iran war, rising inflation, and the Beijing summit are all directly affecting Americans' daily lives right now.";
+  else note = "These are high-stakes stories — the Iran war, worsening inflation, and the Trump-Xi summit are reshaping U.S. policy and the economy. They're worth a closer look.";
+  document.getElementById('s-fraction').textContent = score + '/' + total;
+  document.getElementById('s-pct').textContent = pct + '% correct';
+  document.getElementById('s-note').textContent = note;
+  document.getElementById('score-screen').style.display = 'block';
+}
+
+function restart() {
+  current = 0; score = 0;
+  document.getElementById('score-screen').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
