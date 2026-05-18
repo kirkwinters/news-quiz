@@ -1,452 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>News Quiz — May 14, 2026</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News Quiz — May 18, 2026</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --ink: #1a1714;
-    --ink-mid: #4a4540;
-    --ink-light: #8a847c;
-    --paper: #f7f3ec;
-    --paper-mid: #ede8df;
-    --rule: #c8c0b4;
-    --accent: #b5390a;
-    --correct-bg: #eef4e8;
-    --correct-border: #5a8a2a;
-    --correct-text: #2e4d10;
-    --wrong-bg: #faeaea;
-    --wrong-border: #c04040;
-    --wrong-text: #6b1c1c;
-  }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f4f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-weight: 300;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2rem 1rem 4rem;
-  }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
 
-  .page {
-    width: 100%;
-    max-width: 680px;
-  }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
 
-  /* Masthead */
-  .masthead {
-    text-align: center;
-    border-top: 3px double var(--ink);
-    border-bottom: 3px double var(--ink);
-    padding: 1rem 0;
-    margin-bottom: 2rem;
-  }
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #555;
+    }
 
-  .masthead-label {
-    font-family: 'Source Serif 4', serif;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    margin-bottom: 0.4rem;
-  }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+      max-width: 660px;
+      width: 100%;
+      padding: 36px 40px;
+    }
 
-  .masthead-title {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(28px, 6vw, 46px);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
+    .progress-bar-wrap {
+      height: 6px;
+      background: #e8e8e4;
+      border-radius: 99px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
 
-  .masthead-sub {
-    font-size: 13px;
-    color: var(--ink-light);
-    margin-top: 0.5rem;
-    font-style: italic;
-  }
+    .progress-bar {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
 
-  /* Progress */
-  .progress-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
+    .question-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
 
-  .progress-track {
-    flex: 1;
-    height: 2px;
-    background: var(--rule);
-  }
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
 
-  .progress-fill {
-    height: 2px;
-    background: var(--accent);
-    transition: width 0.4s ease;
-  }
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-  .progress-label {
-    font-size: 12px;
-    color: var(--ink-light);
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
+    .choice-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      border: 2px solid #e0e0db;
+      border-radius: 10px;
+      background: #fafaf8;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+      line-height: 1.4;
+    }
 
-  /* Question card */
-  .question-card {
-    border-top: 1px solid var(--ink);
-    padding-top: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+    .choice-btn:hover:not(:disabled) {
+      border-color: #2563eb;
+      background: #eff4ff;
+    }
 
-  .q-number {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-  }
+    .choice-btn .letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #e8e8e4;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #444;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
 
-  .q-text {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(17px, 3vw, 22px);
-    font-weight: 500;
-    line-height: 1.45;
-    color: var(--ink);
-    margin-bottom: 1.5rem;
-  }
+    .choice-btn.correct { border-color: #16a34a; background: #f0fdf4; }
+    .choice-btn.correct .letter { background: #16a34a; color: #fff; }
 
-  /* Options */
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+    .choice-btn.wrong { border-color: #dc2626; background: #fef2f2; }
+    .choice-btn.wrong .letter { background: #dc2626; color: #fff; }
 
-  .opt-btn {
-    text-align: left;
-    background: var(--paper-mid);
-    border: 1px solid var(--rule);
-    padding: 12px 16px;
-    font-family: 'Source Serif 4', serif;
-    font-size: 15px;
-    font-weight: 300;
-    color: var(--ink);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    line-height: 1.5;
-    width: 100%;
-  }
+    .choice-btn.reveal-correct { border-color: #16a34a; background: #f0fdf4; opacity: 0.72; }
+    .choice-btn.reveal-correct .letter { background: #16a34a; color: #fff; }
 
-  .opt-btn:hover:not(:disabled) {
-    background: var(--paper);
-    border-color: var(--ink-mid);
-  }
+    .choice-btn:disabled { cursor: default; }
 
-  .opt-btn:disabled { cursor: default; }
+    .feedback {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      display: none;
+    }
 
-  .opt-btn.correct {
-    background: var(--correct-bg);
-    border-color: var(--correct-border);
-    color: var(--correct-text);
-  }
+    .feedback.show { display: block; }
+    .feedback.correct-fb { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+    .feedback.wrong-fb   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
 
-  .opt-btn.wrong {
-    background: var(--wrong-bg);
-    border-color: var(--wrong-border);
-    color: var(--wrong-text);
-  }
+    .next-btn {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: none;
+      transition: background 0.15s;
+    }
 
-  .opt-btn.reveal {
-    background: var(--correct-bg);
-    border-color: var(--correct-border);
-    color: var(--correct-text);
-  }
+    .next-btn:hover { background: #1d4ed8; }
+    .next-btn.show { display: block; }
 
-  /* Feedback */
-  .feedback {
-    margin-top: 1.2rem;
-    border-left: 2px solid var(--rule);
-    padding-left: 1rem;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--ink-mid);
-    font-style: italic;
-    display: none;
-  }
+    /* Results */
+    .results { display: none; text-align: center; }
+    .results.show { display: block; }
 
-  /* Next button */
-  .next-btn {
-    margin-top: 1.5rem;
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    padding: 11px 24px;
-    font-family: 'Source Serif 4', serif;
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    display: none;
-    transition: background 0.15s;
-  }
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #eff4ff;
+      border: 4px solid #2563eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
 
-  .next-btn:hover { background: var(--accent); }
+    .score-circle .score-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #2563eb;
+      line-height: 1;
+    }
 
-  /* Score screen */
-  #score-screen {
-    display: none;
-    text-align: center;
-    padding: 2rem 0;
-  }
+    .score-circle .score-denom {
+      font-size: 0.85rem;
+      color: #555;
+      font-weight: 600;
+    }
 
-  .score-fraction {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 72px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1;
-  }
+    .results h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+    .results p  { font-size: 0.95rem; color: #555; margin-bottom: 28px; }
 
-  .score-pct {
-    font-size: 18px;
-    color: var(--ink-light);
-    margin: 0.5rem 0 1.5rem;
-    font-style: italic;
-  }
+    .retake-btn {
+      padding: 13px 36px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 0.97rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .retake-btn:hover { background: #333; }
 
-  .score-divider {
-    width: 60px;
-    height: 1px;
-    background: var(--rule);
-    margin: 1.5rem auto;
-  }
+    footer {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+    }
 
-  .score-note {
-    font-size: 15px;
-    line-height: 1.75;
-    color: var(--ink-mid);
-    max-width: 480px;
-    margin: 0 auto 2rem;
-  }
-
-  .restart-btn {
-    background: transparent;
-    border: 1px solid var(--ink);
-    color: var(--ink);
-    padding: 10px 24px;
-    font-family: 'Source Serif 4', serif;
-    font-size: 14px;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .restart-btn:hover { background: var(--ink); color: var(--paper); }
-
-  /* Footer */
-  .footer {
-    margin-top: 3rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 1rem;
-    font-size: 12px;
-    color: var(--ink-light);
-    text-align: center;
-    letter-spacing: 0.04em;
-  }
-
-  @media (max-width: 480px) {
-    .opt-btn { font-size: 14px; padding: 11px 13px; }
-  }
-</style>
+    @media (max-width: 520px) {
+      .card { padding: 24px 20px; }
+      header h1 { font-size: 1.4rem; }
+    }
+  </style>
 </head>
 <body>
-<div class="page">
 
-  <header class="masthead">
-    <div class="masthead-label">Current Events Quiz</div>
-    <div class="masthead-title">Today&#8217;s News Quiz</div>
-    <div class="masthead-sub">May 14, 2026 &mdash; Seven questions every informed citizen should be able to answer</div>
+  <header>
+    <h1>Today's News Quiz</h1>
+    <p>May 18, 2026 &mdash; How well do you know today's top stories?</p>
   </header>
 
-  <div id="quiz">
-    <div class="progress-row">
-      <div class="progress-track"><div class="progress-fill" id="prog" style="width:0%"></div></div>
-      <div class="progress-label" id="prog-label">1 of 7</div>
+  <div class="card" id="quiz-card">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
     </div>
 
-    <div class="question-card">
-      <div class="q-number" id="q-num">Question 1</div>
-      <div class="q-text" id="q-text"></div>
-      <div class="options" id="opts"></div>
+    <div id="question-area">
+      <div class="question-label" id="q-label">Question 1</div>
+      <div class="question-text" id="q-text"></div>
+      <div class="choices" id="choices"></div>
       <div class="feedback" id="feedback"></div>
       <button class="next-btn" id="next-btn">Continue &rarr;</button>
     </div>
+
+    <div class="results" id="results">
+      <div class="score-circle">
+        <span class="score-num" id="score-num">0</span>
+        <span class="score-denom" id="score-denom">/ 11</span>
+      </div>
+      <h2 id="results-headline"></h2>
+      <p id="results-subtext"></p>
+      <button class="retake-btn" onclick="startQuiz()">Retake the quiz</button>
+    </div>
   </div>
 
-  <div id="score-screen">
-    <div class="score-fraction" id="s-fraction"></div>
-    <div class="score-pct" id="s-pct"></div>
-    <div class="score-divider"></div>
-    <div class="score-note" id="s-note"></div>
-    <button class="restart-btn" onclick="restart()">Retake the quiz</button>
-  </div>
+  <footer>Quiz based on headlines from May 18, 2026</footer>
 
-  <footer class="footer">Quiz based on headlines from May 14, 2026</footer>
-</div>
+  <script>
+    const questions = [
+      {
+        q: "A new NYT/Siena poll shows just 30% of Americans support the decision to go to war with Iran. What share of independents called it the wrong decision?",
+        choices: [
+          "51%",
+          "64%",
+          "73%",
+          "81%"
+        ],
+        answer: 2,
+        explanation: "73% of independents called the decision to go to war with Iran the wrong decision — a striking number, and part of a broader finding that overall Trump approval has hit a second-term low, with 64% of all Americans opposing the war."
+      },
+      {
+        q: "The Justice Department has created a compensation fund for Trump supporters who claim they were mistreated by Democratic administrations. How is this being described?",
+        choices: [
+          "A routine civil rights program expanded by the new administration",
+          "A $1.8 billion fund with no modern precedent for this use of federal law enforcement resources",
+          "A congressional initiative passed with bipartisan support",
+          "A private charity managed outside of DOJ oversight"
+        ],
+        answer: 1,
+        explanation: "The $1.8 billion DOJ fund for Trump allies is described as having no modern precedent — it is an unprecedented use of federal law enforcement resources to compensate political supporters who claim mistreatment by prior administrations."
+      },
+      {
+        q: "Trump's pause on a Taiwan arms package is being called a \"strategic gift to China.\" What is the core concern about this decision?",
+        choices: [
+          "It frees up US weapons stockpiles needed for the Iran war",
+          "It signals to Beijing, Taipei, and allies that American security guarantees can be bargained away, undermining deterrence",
+          "It violates a standing treaty obligation with Taiwan",
+          "It was done without congressional notification, creating a legal challenge"
+        ],
+        answer: 1,
+        explanation: "Analysts say Trump's Taiwan arms delay signals that US security guarantees are negotiable — a message that undermines deterrence at a critical moment and benefits China strategically, even if no formal policy change was announced."
+      },
+      {
+        q: "A new report estimates that over 100,000 American children have been separated from deported parents. Why do experts believe the official count is so much lower?",
+        choices: [
+          "Many deportations happen too quickly to be logged in federal databases",
+          "Parents are not being asked about or are not disclosing their American-citizen children",
+          "The children are counted under a different agency's jurisdiction",
+          "Many families voluntarily chose separation to preserve the children's legal status"
+        ],
+        answer: 1,
+        explanation: "The report finds that federal statistics dramatically undercount family separations because parents aren't being asked about — or aren't disclosing — their American-citizen children at the time of deportation."
+      },
+      {
+        q: "US government borrowing costs have hit their highest level in 22 years. What year's levels does that match, and what is driving the surge?",
+        choices: [
+          "2001 levels, driven by post-9/11 defense spending",
+          "2000 levels, driven by the dot-com boom",
+          "2004 levels, driven by Iran war energy price inflation compounding fiscal pressures",
+          "2008 levels, driven by the housing market crisis"
+        ],
+        answer: 2,
+        explanation: "Bond yields have reached levels not seen since 2004, driven primarily by Iran war energy price inflation piling on top of existing fiscal pressures — a combination that is pushing government borrowing costs to a 22-year high."
+      },
+      {
+        q: "The Iran war's economic toll has now reached $25 billion in costs for global companies. Which unexpected economic development is also part of this story?",
+        choices: [
+          "India's stock market has crashed to a 10-year low",
+          "China's economy has unexpectedly weakened, and mortgage costs are rising in North America and Europe",
+          "The euro has collapsed to parity with the dollar for the first time",
+          "Saudi Arabia has announced it is cutting oil production by 50%"
+        ],
+        answer: 1,
+        explanation: "Beyond the $25 billion corporate bill, the Iran war's economic spillover includes an unexpected weakening of China's economy and rising mortgage costs in North America and Europe — signs the conflict's economic damage is spreading globally."
+      },
+      {
+        q: "Closed-door negotiations have revealed the US is pressing Greenland for what — going beyond a security partnership?",
+        choices: [
+          "A permanent US naval base on the island's east coast",
+          "Operational control of the territory, leaving Greenland officials with little leverage to resist",
+          "Exclusive mining rights to Greenland's rare earth deposits",
+          "Greenland's formal accession to NATO as a US territory"
+        ],
+        answer: 1,
+        explanation: "The US is pressing for operational control of Greenland — not just security partnerships — a demand that goes well beyond earlier public statements and leaves Greenland officials with very little leverage in the negotiations."
+      },
+      {
+        q: "The US and Chinese readouts of the Trump–Xi Beijing summit contained meaningful contradictions. Which three topics did the diverging accounts disagree on?",
+        choices: [
+          "Climate, trade, and human rights",
+          "Iran, Taiwan, and trade commitments",
+          "North Korea, semiconductors, and military exercises",
+          "Ukraine, fentanyl, and intellectual property"
+        ],
+        answer: 1,
+        explanation: "The US and Chinese readouts of the summit diverged on Iran, Taiwan, and trade commitments — suggesting that less was actually resolved than was publicly projected by either side."
+      },
+      {
+        q: "More than 60 Trump allies — including Steve Bannon — signed a letter calling for AI governance. What makes this notable?",
+        choices: [
+          "It is the first time Trump allies have called for any regulation of American businesses",
+          "It is the first organized right-wing push for AI governance, reframing the issue around American workers rather than safety",
+          "It calls for a complete moratorium on new AI model releases until 2027",
+          "It demands that AI companies be nationalized to protect US interests"
+        ],
+        answer: 1,
+        explanation: "The letter from 60+ Trump allies represents the first organized right-wing push for AI governance — notable because it reframes the AI oversight debate around protecting American workers rather than the traditional safety concerns raised by the left and by tech researchers."
+      },
+      {
+        q: "Taiwan was excluded from the White House summary of the Trump–Xi summit. What does this diplomatic signal suggest?",
+        choices: [
+          "Taiwan's status was elevated to a separate bilateral track",
+          "The White House is signaling US willingness to use Taiwan as leverage in broader negotiations with China",
+          "Taiwan requested its exclusion to avoid escalating tensions",
+          "Congress blocked the administration from discussing Taiwan in summit readouts"
+        ],
+        answer: 1,
+        explanation: "Omitting Taiwan entirely from the White House summit readout is a significant diplomatic signal — widely interpreted as indicating US willingness to treat Taiwan as a bargaining chip in its relationship with China."
+      },
+      {
+        q: "A surge in antisemitism targeting members of Congress has been documented. What political context is driving the increase?",
+        choices: [
+          "A rise in far-right extremist groups unconnected to current policy debates",
+          "The political environment around the Iran war and Middle East policy",
+          "Backlash over a Supreme Court ruling on religious freedom",
+          "Controversy over a new congressional investigation into Israel"
+        ],
+        answer: 1,
+        explanation: "The surge in antisemitic incidents targeting Jewish lawmakers is linked to the political environment around the Iran war and US Middle East policy — reflecting how the conflict has inflamed tensions in American political discourse."
+      }
+    ];
 
-<script>
-const questions = [
-  {
-    q: "President Trump is currently in Beijing for a summit with Xi Jinping. What major warning did Xi deliver during their meeting?",
-    opts: [
-      "That China would impose new tariffs if Taiwan arms sales continued",
-      "That mishandling the Taiwan issue could lead to an 'extremely dangerous situation'",
-      "That China was prepared to close the South China Sea to U.S. ships",
-      "That China would pull out of trade negotiations unless sanctions ended"
-    ],
-    correct: 1,
-    explain: "Xi told Trump directly that Taiwan, if handled poorly, could lead to a dangerous clash between the two powers. Taiwan remains the single most volatile issue between the U.S. and China."
-  },
-  {
-    q: "The U.S. is currently fighting a war with which country — a conflict driving up oil prices, fueling inflation, and dominating foreign policy debates?",
-    opts: ["Russia", "North Korea", "Iran", "Saudi Arabia"],
-    correct: 2,
-    explain: "The U.S.-Iran war is the central backdrop to nearly every major news story today: the Trump-Xi summit, rising inflation, Republican midterm anxiety, and the Strait of Hormuz crisis threatening global oil flows."
-  },
-  {
-    q: "The Strait of Hormuz is a critical flashpoint in the Iran war. Why does it matter so much economically?",
-    opts: [
-      "It is the only route for U.S. military supply ships to the region",
-      "It connects the Atlantic and Pacific oceans",
-      "A large share of the world's oil passes through it, and Iran has deployed submarines there",
-      "It is the primary cable route for global internet traffic"
-    ],
-    correct: 2,
-    explain: "The Strait of Hormuz is the narrow chokepoint through which a significant portion of the world's oil supply flows. Iran has deployed submarines there, and both Trump and Xi stressed the need to keep it open."
-  },
-  {
-    q: "The U.S. Senate confirmed a new Federal Reserve chair to succeed Jerome Powell, whose term is ending. Who was confirmed?",
-    opts: ["Janet Yellen", "Kevin Warsh", "Larry Summers", "Neel Kashkari"],
-    correct: 1,
-    explain: "Kevin Warsh was confirmed 54-45, largely along party lines. He takes over as Fed chair at a moment of rising inflation, public economic anxiety, and ongoing pressure on the central bank's independence."
-  },
-  {
-    q: "Inflation data released this week showed price pressures are getting worse, not better. What is the primary concern beyond the Iran-war energy spike?",
-    opts: [
-      "A global semiconductor shortage driving up electronics prices",
-      "Broad price pressures spreading across many categories of goods and services",
-      "A sudden collapse in agricultural exports",
-      "The Federal Reserve cutting interest rates too aggressively"
-    ],
-    correct: 1,
-    explain: "New wholesale price data showed inflation spreading well beyond energy, with pressures across a wide range of goods and services — a troubling sign for household budgets and for Republicans heading into midterms."
-  },
-  {
-    q: "A hantavirus outbreak that began on a cruise ship has prompted quarantines and an international investigation. Where are U.S. passengers who tested positive currently being held?",
-    opts: [
-      "On the docked cruise ship under Coast Guard supervision",
-      "At a national quarantine center in Nebraska",
-      "In a military hospital in Washington, D.C.",
-      "At Walter Reed National Military Medical Center"
-    ],
-    correct: 1,
-    explain: "American passengers who tested positive were flown to a national quarantine unit in Nebraska. The CDC has been managing the response carefully, trying to avoid repeating the communication failures of the Covid era."
-  },
-  {
-    q: "Which of the following best describes the political pressure facing Republicans as the 2026 midterms approach?",
-    opts: [
-      "Voter anger primarily over immigration policy and border security",
-      "Rising inflation, an unpopular war with Iran, and redistricting setbacks in key states",
-      "Declining approval for recent Supreme Court rulings",
-      "Internal conflict over proposed cuts to Medicare and Social Security"
-    ],
-    correct: 1,
-    explain: "Republicans are navigating a difficult combination: rising prices, a divisive and costly Iran war, and court-ordered redistricting reversals — all of which could hurt their midterm performance this November."
-  }
-];
+    const TOTAL = questions.length;
+    let currentQ = 0;
+    let score = 0;
+    let answered = false;
 
-let current = 0, score = 0, answered = false;
+    function startQuiz() {
+      currentQ = 0;
+      score = 0;
+      answered = false;
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('question-area').style.display = '';
+      renderQuestion();
+    }
 
-function render() {
-  const q = questions[current];
-  const total = questions.length;
-  document.getElementById('q-num').textContent = 'Question ' + (current + 1);
-  document.getElementById('prog-label').textContent = (current + 1) + ' of ' + total;
-  document.getElementById('prog').style.width = (current / total * 100) + '%';
-  document.getElementById('q-text').textContent = q.q;
-  document.getElementById('feedback').style.display = 'none';
-  document.getElementById('feedback').textContent = '';
-  document.getElementById('next-btn').style.display = 'none';
-  answered = false;
+    function renderQuestion() {
+      answered = false;
+      const q = questions[currentQ];
+      const letters = ['A', 'B', 'C', 'D'];
 
-  const opts = document.getElementById('opts');
-  opts.innerHTML = '';
-  q.opts.forEach(function(o, i) {
-    const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.textContent = o;
-    btn.onclick = function() { pick(i); };
-    opts.appendChild(btn);
-  });
-}
+      document.getElementById('q-label').textContent = `Question ${currentQ + 1} of ${TOTAL}`;
+      document.getElementById('q-text').textContent = q.q;
+      document.getElementById('progress-bar').style.width = `${(currentQ / TOTAL) * 100}%`;
 
-function pick(i) {
-  if (answered) return;
-  answered = true;
-  const q = questions[current];
-  const btns = document.getElementById('opts').querySelectorAll('.opt-btn');
-  btns.forEach(function(b) { b.disabled = true; });
-  btns[i].classList.add(i === q.correct ? 'correct' : 'wrong');
-  if (i !== q.correct) btns[q.correct].classList.add('reveal');
-  if (i === q.correct) score++;
-  const fb = document.getElementById('feedback');
-  fb.textContent = q.explain;
-  fb.style.display = 'block';
-  const nb = document.getElementById('next-btn');
-  nb.textContent = current < questions.length - 1 ? 'Continue \u2192' : 'See results \u2192';
-  nb.style.display = 'inline-block';
-}
+      const feedback = document.getElementById('feedback');
+      feedback.className = 'feedback';
+      feedback.textContent = '';
 
-document.getElementById('next-btn').onclick = function() {
-  current++;
-  if (current >= questions.length) showScore();
-  else render();
-};
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.className = 'next-btn';
+      nextBtn.textContent = currentQ === TOTAL - 1 ? 'See Results' : 'Continue →';
 
-function showScore() {
-  document.getElementById('quiz').style.display = 'none';
-  const total = questions.length;
-  const pct = Math.round(score / total * 100);
-  let note;
-  if (pct >= 85) note = "You're well-informed on the major stories shaping U.S. policy, the economy, and the world right now. Keep it up.";
-  else if (pct >= 57) note = "You have a solid grasp of the big picture. A few key details on the Iran war, the new Fed chair, and the Trump-Xi summit are worth following closely.";
-  else if (pct >= 28) note = "Some important stories may have slipped by. The Iran war, rising inflation, and the Beijing summit are all directly affecting Americans' daily lives right now.";
-  else note = "These are high-stakes stories — the Iran war, worsening inflation, and the Trump-Xi summit are reshaping U.S. policy and the economy. They're worth a closer look.";
-  document.getElementById('s-fraction').textContent = score + '/' + total;
-  document.getElementById('s-pct').textContent = pct + '% correct';
-  document.getElementById('s-note').textContent = note;
-  document.getElementById('score-screen').style.display = 'block';
-}
+      const choicesEl = document.getElementById('choices');
+      choicesEl.innerHTML = '';
 
-function restart() {
-  current = 0; score = 0;
-  document.getElementById('score-screen').style.display = 'none';
-  document.getElementById('quiz').style.display = 'block';
-  render();
-}
+      q.choices.forEach((choice, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${choice}</span>`;
+        btn.addEventListener('click', () => selectAnswer(i));
+        choicesEl.appendChild(btn);
+      });
+    }
 
-render();
-</script>
+    function selectAnswer(idx) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentQ];
+      const buttons = document.querySelectorAll('.choice-btn');
+      const feedback = document.getElementById('feedback');
+
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.answer && idx !== q.answer) {
+          btn.classList.add('reveal-correct');
+        }
+      });
+
+      if (idx === q.answer) {
+        score++;
+        buttons[idx].classList.add('correct');
+        feedback.className = 'feedback correct-fb show';
+        feedback.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+      } else {
+        buttons[idx].classList.add('wrong');
+        feedback.className = 'feedback wrong-fb show';
+        feedback.innerHTML = `<strong>Not quite.</strong> ${q.explanation}`;
+      }
+
+      document.getElementById('next-btn').classList.add('show');
+    }
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+      currentQ++;
+      if (currentQ >= TOTAL) {
+        showResults();
+      } else {
+        renderQuestion();
+      }
+    });
+
+    function showResults() {
+      document.getElementById('question-area').style.display = 'none';
+      document.getElementById('progress-bar').style.width = '100%';
+
+      const results = document.getElementById('results');
+      results.classList.add('show');
+
+      document.getElementById('score-num').textContent = score;
+      document.getElementById('score-denom').textContent = `/ ${TOTAL}`;
+
+      const pct = score / TOTAL;
+      let headline, subtext;
+
+      if (pct === 1) {
+        headline = "Perfect score! 🎉";
+        subtext = "Flawless. You read every headline today.";
+      } else if (pct >= 0.8) {
+        headline = "Excellent work!";
+        subtext = "You're clearly on top of the news. Just a couple slipped by.";
+      } else if (pct >= 0.6) {
+        headline = "Well done!";
+        subtext = "Solid performance — you know your way around today's headlines.";
+      } else if (pct >= 0.4) {
+        headline = "Not bad!";
+        subtext = "A decent effort. The news cycle moves fast — try again to improve.";
+      } else {
+        headline = "Keep reading!";
+        subtext = "Today was a big news day. Retake the quiz to lock in what you learned.";
+      }
+
+      document.getElementById('results-headline').textContent = headline;
+      document.getElementById('results-subtext').textContent = subtext;
+    }
+
+    startQuiz();
+  </script>
+
 </body>
 </html>
